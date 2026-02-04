@@ -92,7 +92,7 @@ Foam::dictionary::includedDictionary::includedDictionary
     {
         FatalIOErrorInFunction(parentDict)
             << "Included dictionary file " << fName
-            << " cannot be found for dictionary " << parentDict.name()
+             << " cannot be opened for dictionary " << parentDict.name()
             << exit(FatalIOError);
     }
 
@@ -110,6 +110,12 @@ Foam::autoPtr<Foam::dictionary> Foam::dictionary::New(Istream& is)
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+
+// Read dictionary entries from the given input stream.
+//
+// Optionally retains the FoamFile header entry when keepHeader is true.
+// Returns true on successful parsing, false otherwise.
+
 bool Foam::dictionary::read(Istream& is, const bool keepHeader)
 {
     // Check for empty dictionary
@@ -122,6 +128,7 @@ bool Foam::dictionary::read(Istream& is, const bool keepHeader)
     {
         FatalIOErrorInFunction(is)
             << "Istream not OK for reading dictionary "
+            << name()
             << exit(FatalIOError);
 
         return false;
@@ -153,7 +160,8 @@ bool Foam::dictionary::read(Istream& is, const bool keepHeader)
     if (is.bad())
     {
         InfoInFunction
-            << "Istream not OK after reading dictionary " << name()
+             << "Istream became invalid after reading dictionary "
+            << name()
             << endl;
 
         return false;
